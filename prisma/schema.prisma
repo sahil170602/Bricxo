@@ -1,0 +1,68 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Categories (Cement, Steel, etc.)
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  image     String?
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+// 2. Products (The actual items)
+model Product {
+  id            String      @id @default(uuid())
+  name          String
+  description   String?
+  price         Float
+  originalPrice Float?
+  rating        Float       @default(0)
+  image         String
+  unit          String
+  inStock       Boolean     @default(true)
+  
+  // Relations
+  category      Category    @relation(fields: [categoryId], references: [id])
+  categoryId    String
+
+  orderItems    OrderItem[] // ✅ Added relation to OrderItems
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+// 3. Orders (The receipt)
+model Order {
+  id              String      @id @default(uuid())
+  total           Float
+  status          String      @default("Processing")
+  paymentMethod   String
+  shippingAddress String
+  createdAt       DateTime    @default(now())
+  
+  items           OrderItem[]
+}
+
+// 4. Order Items (Items inside an order)
+model OrderItem {
+  id        String  @id @default(uuid())
+  
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  
+  productId String
+  product   Product @relation(fields: [productId], references: [id]) // ✅ Linked to Product
+  
+  quantity  Int
+  price     Float
+}

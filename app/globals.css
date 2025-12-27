@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* In Tailwind v4, we define custom colors right here!
+   This automatically creates 'bg-pumpkin', 'text-offwhite', etc.
+*/
+@theme {
+  --color-pumpkin: #FF8237;
+  --color-pumpkin-dark: #E56A1F;
+  --color-offwhite: #E7E3D2;
+  --color-offwhite-light: #F2EFE5;
+}
+
+/* Your Industrial Background Settings */
+:root {
+  --background: #E7E3D2;
+  --foreground: #1A1A1A;
+}
+
+body {
+  background: radial-gradient(circle at 50% 0%, #F2EFE5 0%, #E7E3D2 100%);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
