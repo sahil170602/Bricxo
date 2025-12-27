@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { ArrowRight, Truck, ShieldCheck, Phone, Star } from "lucide-react";
@@ -6,7 +8,6 @@ import AddToCartButton from "@/components/AddToCartButton";
 import MaterialCalculator from "@/components/MaterialCalculator";
 import FloatingCart from "@/components/FloatingCart";
 
-export const dynamic = 'force-dynamic';
 const prisma = new PrismaClient();
 
 async function getFeaturedProducts() {
