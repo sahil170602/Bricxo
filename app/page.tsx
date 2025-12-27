@@ -3,29 +3,36 @@ export const dynamic = 'force-dynamic';
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { ArrowRight, Truck, ShieldCheck, Phone, Star } from "lucide-react";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client"; // ❌ Removed DB
 import AddToCartButton from "@/components/AddToCartButton";
 import MaterialCalculator from "@/components/MaterialCalculator";
 import FloatingCart from "@/components/FloatingCart";
 
-const prisma = new PrismaClient();
+// ✅ MOCK DATA (Hardcoded so site doesn't crash)
+const MOCK_CATEGORIES = [
+  { id: '1', name: 'Cement', image: '📦' },
+  { id: '2', name: 'TMT Steel', image: '🏗️' },
+  { id: '3', name: 'Bricks', image: '🧱' },
+  { id: '4', name: 'Sand', image: '🏜️' },
+  { id: '5', name: 'Aggregates', image: '🪨' },
+  { id: '6', name: 'Paints', image: '🎨' },
+];
 
-async function getFeaturedProducts() {
-  const products = await prisma.product.findMany({
-    take: 8, 
-    orderBy: { createdAt: 'desc' },
-    include: { category: true }
-  });
-  return products;
-}
+const MOCK_PRODUCTS = [
+  { id: '1', name: 'Ultratech Cement (50kg)', price: 420, unit: 'Bag', rating: 4.8, image: '📦' },
+  { id: '2', name: 'Kamdhenu TMT Bar 12mm', price: 650, unit: 'Rod', rating: 4.5, image: '🏗️' },
+  { id: '3', name: 'Red Clay Bricks', price: 12, unit: 'Piece', rating: 4.2, image: '🧱' },
+  { id: '4', name: 'River Sand', price: 4500, unit: 'Ton', rating: 4.6, image: '🏜️' },
+  { id: '5', name: 'Asian Paints Royale', price: 2500, unit: 'Bucket', rating: 4.9, image: '🎨' },
+  { id: '6', name: 'Dr. Fixit Waterproofing', price: 850, unit: 'Kg', rating: 4.7, image: '💧' },
+  { id: '7', name: 'Tata Steel 10mm', price: 580, unit: 'Rod', rating: 4.8, image: '🏗️' },
+  { id: '8', name: 'White Cement', price: 900, unit: 'Bag', rating: 4.3, image: '📦' },
+];
 
-async function getCategories() {
-  return await prisma.category.findMany();
-}
-
-export default async function Home() {
-  const products = await getFeaturedProducts();
-  const categories = await getCategories();
+export default function Home() {
+  // ✅ Directly using mock data instead of await getFeaturedProducts()
+  const products = MOCK_PRODUCTS;
+  const categories = MOCK_CATEGORIES;
 
   return (
     <main className="min-h-screen bg-[#E7E3D2]">
@@ -88,8 +95,7 @@ export default async function Home() {
               {categories.map((cat) => (
                  <Link key={cat.id} href={`/search?q=${cat.name}`} className="group block">
                   <div className="bg-white aspect-[4/3] rounded-2xl border border-gray-200 flex flex-col items-center justify-center hover:border-[#FF8237] hover:shadow-lg transition-all cursor-pointer">
-                    <span className="text-5xl mb-3">
-{(cat.image || '').startsWith('http') ? '📦' : (cat.image || '📦')}                    </span>
+                    <span className="text-5xl mb-3">{cat.image}</span>
                     <span className="text-sm font-bold text-gray-700 uppercase">{cat.name}</span>
                   </div>
                 </Link>
@@ -106,9 +112,10 @@ export default async function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
              <div key={product.id} className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-xl transition-all duration-300">
+               {/* Note: Clicking this link might fail if the Product Page still uses Database! */}
                <Link href={`/product/${product.id}`} className="group block mb-4">
                  <div className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center text-6xl group-hover:scale-105 transition-transform duration-300">
-                    {product.image.startsWith('http') ? '📦' : product.image}
+                    {product.image}
                  </div>
                  <div className="mt-4">
                     <div className="flex items-center gap-1 mb-2">
@@ -125,7 +132,6 @@ export default async function Home() {
                </Link>
                <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
                   <p className="text-xl font-black text-gray-900">₹{product.price}</p>
-                  {/* Event handler moved into the Client Component prop */}
                   <AddToCartButton 
                     product={{
                       id: product.id,
@@ -143,4 +149,6 @@ export default async function Home() {
       <FloatingCart />
     </main>
   );
+}
+
 }
