@@ -1,14 +1,11 @@
-export const dynamic = 'force-dynamic';
-
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { ArrowRight, Truck, ShieldCheck, Phone, Star } from "lucide-react";
-// import { PrismaClient } from "@prisma/client"; // ❌ Removed DB
 import AddToCartButton from "@/components/AddToCartButton";
 import MaterialCalculator from "@/components/MaterialCalculator";
 import FloatingCart from "@/components/FloatingCart";
 
-// ✅ MOCK DATA (Hardcoded so site doesn't crash)
+// ✅ MOCK DATA (Using this to skip Database for now)
 const MOCK_CATEGORIES = [
   { id: '1', name: 'Cement', image: '📦' },
   { id: '2', name: 'TMT Steel', image: '🏗️' },
@@ -30,7 +27,6 @@ const MOCK_PRODUCTS = [
 ];
 
 export default function Home() {
-  // ✅ Directly using mock data instead of await getFeaturedProducts()
   const products = MOCK_PRODUCTS;
   const categories = MOCK_CATEGORIES;
 
@@ -112,7 +108,6 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
              <div key={product.id} className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-xl transition-all duration-300">
-               {/* Note: Clicking this link might fail if the Product Page still uses Database! */}
                <Link href={`/product/${product.id}`} className="group block mb-4">
                  <div className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center text-6xl group-hover:scale-105 transition-transform duration-300">
                     {product.image}
@@ -149,6 +144,4 @@ export default function Home() {
       <FloatingCart />
     </main>
   );
-}
-
 }
