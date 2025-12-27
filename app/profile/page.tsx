@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Navbar from '@/components/Navbar';
 import BackButton from '@/components/BackButton';
 import { PrismaClient } from '@prisma/client';
